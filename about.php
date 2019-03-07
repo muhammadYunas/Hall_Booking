@@ -10,7 +10,7 @@
         <div class="text-center mg-top-30">
             <h1 class="text-uppercase">About Me</h1>
             <div class="green-line"></div>
-        </div> 
+        </div>
 
        <p>Hi, My name is Donbok Kharkongor, I take this chance to provide all the avialable Hall for those who need. This an example website is build specifically for Hall booking. You will get the latest hall. If you have anything you to ask, contact me on the below number or use the contact form. <br>
        <strong>Phone:</strong> 918787754861<br>

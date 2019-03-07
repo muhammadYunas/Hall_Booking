@@ -66,8 +66,8 @@ include("include/db_config.php");
 						$page=ceil($total/$limit);
 						 $query1="SELECT * FROM hall WHERE h_name LIKE '$src%' ORDER BY h_id DESC LIMIT $start,$limit";
 						 $result1=mysqli_query($con,$query1);
-						if (mysqli_num_rows($result1) > 0) 
-						 { 
+						if (mysqli_num_rows($result1) > 0)
+						 {
 						while($rows=mysqli_fetch_array($result1))
 							{
 						?>
@@ -81,14 +81,14 @@ include("include/db_config.php");
 					<?php
 										}
 									 }
-							
+
 								 else
 								 {
 									 echo "<script> alert('Hall Not Listed, Contact Us to Enter the Hall you Know');</script>";
 								 }
 							}
 				}
-				
+
 }
 					?>
 			    	</table>
@@ -99,5 +99,3 @@ include("include/db_config.php");
 </section>
 <hr>
 <?php include("include/footer.php");?>
-
-

@@ -1,6 +1,6 @@
 <?php
 $title = 'Donz Hall Booking';
-include("include/db_config.php");	
+include("include/db_config.php");
 include("include/header.php");
 ?>
 
@@ -26,13 +26,13 @@ $rn= rand(1000, 10000000);
 					$title=$_POST["name"];
 					$mo=$_POST["u_mo"];
 					$dt=$_POST["dt"];
-					
+
 					if( $title=="" || $mo=="" || $dt=="")
 					{
 						echo "<script> alert('All field required');</script>";
 						return;
 					}
-					
+
 					else
 					{
 						$query="insert into user_booking (u_name,u_mobile,h_id,b_date,amnt,h_active,ran_id,payment) values ('$title','$mo','$slno','$dt','$pr','$status','$rn','$py')";
@@ -62,7 +62,7 @@ $rn= rand(1000, 10000000);
 					<input type="text" name="name" placeholder="Individual/Organization Name" class="form-control" required>
 				</div>
 				<div class="form-group">
-					<input type="text" name="u_mo" placeholder="Telephone/Mobile Number" class="form-control" required>
+					<input type="number" name="u_mo" placeholder="Telephone/Mobile Number" class="form-control" required>
 				</div>
 				<div class="form-group">
 					<input type="date" name="dt" Placeholder="mm/dd/yyyy" class="form-control" required>

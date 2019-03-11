@@ -17,12 +17,14 @@ include('include/nav.php');
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-2"></div>
-		<div class="col-md-8 col-sm-12 mg-top-50">
+		<!-- <div class="col-md-2"></div> -->
+		<div class="col-md-12 col-sm-12 mg-top-50">
 			<div class="table-responsive">
  <table class="table table-hover" border="1" width="900" id="customers">
 		<tr>
 			<th>Hall Name</th>
+			<th>Description</th>
+			<th>Image</th>
 			<th>Place</th>
 			<th>Price</th>
 			<th colspan="2">Action</th>
@@ -45,7 +47,7 @@ include('include/nav.php');
 
 		}
 	$page=ceil($total/$limit);
-	 $query1="select * from hall order by h_id desc limit $start,$limit";
+	 $query1="SELECT * FROM hall ORDER BY h_id DESC LIMIT $start,$limit";
 	 $result1=mysqli_query($con,$query1);
 	if (mysqli_num_rows($result1) > 0) 
 	 { 
@@ -54,6 +56,8 @@ include('include/nav.php');
 ?>
 			<tr>
 			<td><?php echo $rows['h_name']?></td>
+			<td><?php echo $rows['dscr']?></td>
+			<td><img style="width: 100px; height: 100px;" src="../uploads/halls/<?php echo $rows['img']?>"></td>
 			<td><?php echo $rows['h_place']?></td>
 			<td><?php echo $rows['price']?></td>
 			<td> <a href="update_hall.php?Serial_no=<?php echo $rows['h_id'];?>"><input class="btn btn-success" type="submit" value="Update"></a></td>
@@ -66,7 +70,7 @@ include('include/nav.php');
   </table>
 </div>
 		</div>
-		<div class="col-md-2"></div>
+		<!-- <div class="col-md-2"></div> -->
 	</div>
 </div>
 

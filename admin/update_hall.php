@@ -15,22 +15,38 @@ include('include/nav.php');
 ?>
 
 <?php
-	$slno=$_GET["Serial_no"];
-	$query="select * from hall where h_id=$slno";
-	$result=mysqli_query($con,$query);
-	$rows=mysqli_fetch_array($result);
-	$ti=$rows['h_name'];
-	$cn=$rows['h_place'];
-	$pr=$rows['price'];
+	$slno = $_GET["Serial_no"];
+	$query = "SELECT * FROM hall WHERE h_id = $slno";
+	$result = mysqli_query($con,$query);
+	$rows = mysqli_fetch_assoc($result);
+	// echo "<pre>";
+	// print_r($rows);
+	// echo "</pre>";
+	$name = $rows['h_name'];
+	$dscr = $rows['dscr'];
+	$img = $rows['img'];
+	$add = $rows['h_place'];
+	$price = $rows['price'];
+	
 ?>
 
 <?php
 if(isset($_POST['btn_update'])) {
-	$title=$_POST["ti"];
-	$content=$_POST["content"];
-	$pr=$_POST["price"];
+	$name = mysqli_real_escape_string($con, $_POST["name"]);
+	$add = mysqli_real_escape_string($con, $_POST["add"]);
+	$price = mysqli_real_escape_string($con, $_POST["price"]);
+	$dscr = mysqli_real_escape_string($con, $_POST["dscr"]);
 	
-	if(empty($title) || empty($content) || empty($pr))
+	$fileName      = $_FILES["img"]["name"];
+  	$fileTmpName   = $_FILES["img"]["tmp_name"];
+
+  	$fileExt       = explode('.', $fileName);
+  	$fileActualExt = strtolower(end($fileExt));
+  	// echo print_r($img);
+
+  	$allowed       = array('jpg','jpeg','png');
+	
+	if(empty($name) || empty($add) || empty($price) || empty($dscr))
 	{
 		echo "<script> alert('All field required');</script>";
 		return;
@@ -38,17 +54,24 @@ if(isset($_POST['btn_update'])) {
 	
 	else
 	{
-		$query="update hall set h_name='$title', h_place='$content', price='$pr' where h_id=$slno";
-		if(mysqli_query($con,$query))
-		{
-		echo "<script> alert('Successful');</script>";
-		}
-		else
-		{
+
+	if (in_array($fileActualExt, $allowed)) {
+		$fileNewName = uniqid().".".$fileName;
+        $fileDestination = '../uploads/halls/'.$fileNewName;
+        $update_dir = '../uploads/halls/';
+        unlink($update_dir.$rows['img']);
+        
+        $query="UPDATE hall SET h_name = '$name', dscr = '$dscr', img = '$fileNewName', h_place = '$add', price = '$price' WHERE h_id = $slno";
+		if(mysqli_query($con,$query)) {
+			echo "<script> alert('Successful');</script>";
+			move_uploaded_file($fileTmpName, $fileDestination);
+		} else {
 			echo "<script> alert('Check if the field conatin special charecter or contact administrator');</script>";
 		}
-		}
+
+    }
 	}
+}
 ?>
 	<div class="container">
 		<div class="row">
@@ -61,15 +84,27 @@ if(isset($_POST['btn_update'])) {
 			</div>
 
 			<label>ID Number: <?php echo $slno;?></label>
-			<form action="" method="post" class="form">
+			<form method="post" action="<?php $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 			<div class="form-group">
-				<input type="text" name="ti" class="srctxt form-control" value="<?php echo $ti;?> "required>
+			<label>Hall Name</label>
+			<input placeholder="hall name" type="text" name="name" class="srctxt form-control" value="<?php echo $name;?>" required>
 			</div>
 			<div class="form-group">
-				<input type="text" name="content" class="srctxt form-control" value="<?php echo $cn;?>"required>
+			<label>Hall description</label>
+			<textarea cols="" rows="3" class="form-control" name="dscr" placeholder="Enter description" required><?php echo $dscr; ?></textarea>
 			</div>
 			<div class="form-group">
-				<input type="text" name="price" class="srctxt form-control" value="<?php echo $pr;?>"required>
+			<label>Update Hall Image :</label>
+			<img style="width: 100px; height: 100px;" src="../uploads/halls/<?php echo $img; ?>">
+			<input type="file" class="form-control" name="img" required accept="*/image">
+			</div>
+			<div class="form-group">
+			<label>Hall address</label>
+			<input placeholder="hall address" type="text" name="add" class="srctxt form-control" value="<?php echo $add;?>"required>
+			</div>
+			<div class="form-group">
+			<label>Hall price</label>
+			<input placeholder="hall price" type="text" name="price" class="srctxt form-control" value="<?php echo $price;?>"required>
 			</div>
 			<input class="btn btn-success" type="submit" name="btn_update" value="Update" id="btn"/>
 			</form>

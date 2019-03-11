@@ -3,15 +3,15 @@ session_start();
 include("include/db_config.php");
 if(!(isset($_SESSION['log_user']))) {
 		header("location:check.php");
-	} else {	
+	} else {
 		$user_name=$_SESSION['log_user'];
-	
+
 ?>
 <?php include('include/header.php'); ?>
 
 <?php
 	if(isset($_POST["btnreg"])) {
-		// function validate_input($data) 
+		// function validate_input($data)
 		// 	{
 	 //  			$data = trim($data);
 	 //  			$data = stripslashes($data);
@@ -19,43 +19,41 @@ if(!(isset($_SESSION['log_user']))) {
 	 //   			return $data;
 		// 	}
 
-			$title 	 = mysqli_real_escape_string($con, $_POST["title"]);
-			$content = mysqli_real_escape_string($con, $_POST["content"]);
-			$dscr = mysqli_real_escape_string($con, $_POST["description"]);
-			$img = $_FILES["img"];
-			$price 	 = mysqli_real_escape_string($con, $_POST["price"]);
+  	$title 	 = mysqli_real_escape_string($con, $_POST["title"]);
+  	$content = mysqli_real_escape_string($con, $_POST["content"]);
+  	$dscr 	 = mysqli_real_escape_string($con, $_POST["description"]);
+  	$price 	 = mysqli_real_escape_string($con, $_POST["price"]);
 
-			$fileName      = $_FILES['img']['name'];
-	        $fileTmpName   = $_FILES['img']['tmp_name'];
+  	$fileName      = $_FILES["img"]["name"];
+  	$fileTmpName   = $_FILES["img"]["tmp_name"];
 
-	        $fileExt       = explode('.', $fileName);
-	        $fileActualExt = strtolower(end($fileExt));
-	        // echo print_r($img);
+  	$fileExt       = explode('.', $fileName);
+  	$fileActualExt = strtolower(end($fileExt));
+  	// echo print_r($img);
 
-	        $allowed       = array('jpg','jpeg','png');
+  	$allowed       = array('jpg','jpeg','png');
 
-			if(empty($title) || empty($content) || empty($price) || empty($dscr) || empty($img))
-			{
-				echo "<script> alert('All field required');</script>";
+	if(empty($title) || empty($content) || empty($price) || empty($dscr))
+	{
+		echo "<script> alert('All field required');</script>";
+	} else {
+
+	if (in_array($fileActualExt, $allowed)) {
+		$fileNewName = uniqid().".".$fileName;
+        $fileDestination = '../uploads/halls/'.$fileNewName;
+        $sql = "INSERT INTO hall (h_name,dscr,img,h_place,price) VALUES ('$title','$dscr','$fileNewName','$content','$price')";
+
+		if (mysqli_query($con, $sql)) {
+				echo "<script> alert('Successful');</script>";
+				move_uploaded_file($fileTmpName, $fileDestination);
 			} else {
+				//echo "<script> alert('Check if the field contain special charecter, or contact an administrator');</script>";
+				echo mysqli_error($con);
+			}
 
-			if (in_array($fileActualExt, $allowed)) {
-				$fileNewName = uniqid().".".$fileName;
-                $fileDestination = 'uploads/halls/'.$fileNewName;
-
-                $sql = "INSERT INTO hall (h_name,dscr,img,h_place,price) VALUES ('$title','$dscr','$fileNewName','$content','$price')";
-
-				if (mysqli_query($con, $sql)) {
-						echo "<script> alert('Successful');</script>";
-						move_uploaded_file($fileTmpName, $fileDestination);
-					} else {
-						//echo "<script> alert('Check if the field contain special charecter, or contact an administrator');</script>";
-						echo mysqli_error($con);
-					}
-
-				}
-			}	
+		}
 	}
+}
 ?>
 
 <?php
@@ -80,13 +78,13 @@ include('include/nav.php');
         <div class="green-line"></div>
 	</div>
 
-	<form action="home.php" method="post" class="form">
+	<form method="post" action="<?php $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 		<div class="form-group">
 			<input type="text" name="title" class="form-control" placeholder="Enter Hall Name" required>
 		</div>
 
 		<div class="form-group">
-		<textarea cols="" rows="5" class="form-control" name="content" placeholder="Enter Address" required></textarea>
+		<input class="form-control" name="content" placeholder="Enter Address" required>
 		</div>
 
 		<div class="form-group">
@@ -99,10 +97,10 @@ include('include/nav.php');
 		</div>
 
 		<div class="form-group">
-			<input type="text" class="form-control" name="price" placeholder="Enter Price" required>
+			<input type="number" class="form-control" name="price" placeholder="Enter Price" required>
 		</div>
 
-		<input type="submit" value="Add" class="btn btn-primary" name="btnreg">	
+		<input type="submit" value="Add" class="btn btn-primary" name="btnreg">
 	</form>
 </div>
 <div class="col-md-2"></div>
@@ -116,7 +114,7 @@ include('include/nav.php');
 		?>
 	</p>
 </div>
-			
+
 <div id="view" class="tabcontent">
 <p class="">
 	<?php
@@ -124,7 +122,7 @@ include('include/nav.php');
 	?>
 </p>
 </div>
-			
+
 <div id="edit" class="tabcontent">
 <p class="double">
 	<?php

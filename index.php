@@ -51,12 +51,13 @@
 				<tr>
 				<th><?php echo $rows['h_name'];?></th>
 				<th>Price</th>
-				<th>Action</th>
+				<th colspan="2">Action</th>
 				</tr>
 				<tr>
 				<td><?php echo $rows['h_place'];?></td>
 				<td><?php echo $rows['price'];?></td>
-				<td><a href="booking.php?Serial_no=<?php echo $rows['h_id'];?>"><input type="submit" class="btn btn-success" value="BOOK"></a></td>
+				<td><a href="booking.php?Serial_no=<?php echo $rows['h_id'];?>"><input type="submit" class="btn btn-success" value="BOOK"></a>
+					<a href="detail.php?Serial_no=<?php echo $rows['h_id'];?>"><input type="submit" class="btn btn-success" value="DETAIL"></a></td>
 						
 				</tr>
 					<?php

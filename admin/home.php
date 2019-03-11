@@ -21,19 +21,38 @@ if(!(isset($_SESSION['log_user']))) {
 
 			$title 	 = mysqli_real_escape_string($con, $_POST["title"]);
 			$content = mysqli_real_escape_string($con, $_POST["content"]);
+			$dscr = mysqli_real_escape_string($con, $_POST["description"]);
+			$img = $_FILES["img"];
 			$price 	 = mysqli_real_escape_string($con, $_POST["price"]);
-			if(empty($title) || empty($content) || empty($price))
+
+			$fileName      = $_FILES['img']['name'];
+	        $fileTmpName   = $_FILES['img']['tmp_name'];
+
+	        $fileExt       = explode('.', $fileName);
+	        $fileActualExt = strtolower(end($fileExt));
+	        // echo print_r($img);
+
+	        $allowed       = array('jpg','jpeg','png');
+
+			if(empty($title) || empty($content) || empty($price) || empty($dscr) || empty($img))
 			{
 				echo "<script> alert('All field required');</script>";
 			} else {
 
-			$sql = "INSERT INTO hall (h_name, h_place,price) VALUES ('$title','$content','$price')";
+			if (in_array($fileActualExt, $allowed)) {
+				$fileNewName = uniqid().".".$fileName;
+                $fileDestination = 'uploads/halls/'.$fileNewName;
 
-			if (mysqli_query($con, $sql)) {
-					echo "<script> alert('Successful');</script>";
-				} else {
-					//echo "<script> alert('Check if the field contain special charecter, or contact an administrator');</script>";
-					echo mysqli_error($con);
+                $sql = "INSERT INTO hall (h_name,dscr,img,h_place,price) VALUES ('$title','$dscr','$fileNewName','$content','$price')";
+
+				if (mysqli_query($con, $sql)) {
+						echo "<script> alert('Successful');</script>";
+						move_uploaded_file($fileTmpName, $fileDestination);
+					} else {
+						//echo "<script> alert('Check if the field contain special charecter, or contact an administrator');</script>";
+						echo mysqli_error($con);
+					}
+
 				}
 			}	
 	}
@@ -67,8 +86,16 @@ include('include/nav.php');
 		</div>
 
 		<div class="form-group">
-		<textarea cols="" rows="5" class="form-control" name="content" placeholder="Enter Address" required>
-		</textarea>
+		<textarea cols="" rows="5" class="form-control" name="content" placeholder="Enter Address" required></textarea>
+		</div>
+
+		<div class="form-group">
+		<textarea cols="" rows="3" class="form-control" name="description" placeholder="Enter description" required></textarea>
+		</div>
+
+		<div class="form-group">
+			<label>Select Hall Image :</label>
+			<input type="file" class="form-control" name="img" required accept="*/image">
 		</div>
 
 		<div class="form-group">
